@@ -1,6 +1,8 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
+import json
+
 import credentials
 
 # IMPORT YOUR CREDENTIALS for your twitter app
@@ -9,7 +11,8 @@ import credentials
 class StdOutListener(StreamListener):
 
     def on_data(self, data):
-        print data + ","
+        print type(json.loads(data.encode('ascii', 'ignore')))
+        print json.loads(data.encode('ascii', 'ignore'))
         return True
 
     def on_error(self, status):
