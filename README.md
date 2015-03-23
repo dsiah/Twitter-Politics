@@ -5,4 +5,4 @@
 ##pip install list:
 - tweepy
 - nltk
-
+coming soon [- pymongo]
