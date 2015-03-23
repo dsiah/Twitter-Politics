@@ -1,7 +1,7 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-from credentials import *
+import credentials
 
 # IMPORT YOUR CREDENTIALS for your twitter app
 

@@ -1,3 +1,8 @@
 # twitter-politico
 ~ *.* ~
-DONT FORGET YOUR CONFIGS
+- Note: don’t forget to install dependencies and establish app configs
+
+##pip install list:
+- tweepy
+- nltk
+
