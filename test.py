@@ -35,6 +35,7 @@ if __name__ == '__main__':
     auth = OAuthHandler(credentials.consumer_key, credentials.consumer_secret)
     auth.set_access_token(credentials.access_token, credentials.access_token_secret)
     stream = Stream(auth, l)
+    
 
 
     stream.filter(track=['Hilary', 'Cruz', 'Politics']) 
