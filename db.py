@@ -8,3 +8,7 @@ db = client.tweets1
 collection = db.testData
 
 #more comments
+listo = collection.find()
+
+for i in listo:
+	print i, "\n"
