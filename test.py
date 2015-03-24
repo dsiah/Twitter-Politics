@@ -12,7 +12,10 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
-        print tweet['text'], tweet['id']
+        print "Wrote tweet" , tweet['id']
+        db = client.tweets1
+        collection = db.testData
+        collection.insert({ 'tweetId': tweet['id'], 'text': tweet['text'] })
         return True
 
     def on_error(self, status):
