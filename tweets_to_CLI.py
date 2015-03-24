@@ -7,29 +7,20 @@ from pymongo import MongoClient
 import json
 import credentials # custom security file MUST-HAVE
 
+#This script prints the output to the command line, not to the database
+
 #This is a basic listener that just prints received tweets to stdout.
 class StdOutListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
-        print "Wrote tweet" , tweet['id']
-        db = client.tweets1
-        collection = db.testData
-        collection.insert({ 'tweetId': tweet['id'], 'text': tweet['text'] })
+        print tweet['text']
         return True
 
     def on_error(self, status):
         print status
 
-def writeToMongo (dict):
-    # if type(dict) != dict: return error!
-    db = client.tweets1
-    collection = db.testData
-    return True
-
 if __name__ == '__main__':
-    client = MongoClient('localhost', 27017)
-
     #This handles Twitter authentification and the connection to Twitter Streaming API
     l = StdOutListener()
     auth = OAuthHandler(credentials.consumer_key, credentials.consumer_secret)
