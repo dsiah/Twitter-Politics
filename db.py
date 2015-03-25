@@ -10,5 +10,11 @@ collection = db.testData
 #more comments
 listo = collection.find()
 
-for i in listo:
-	print i, "\n"
+class PoliticsDB:
+
+	def __init__(self, ipaddress):
+		self.ipaddress = ipaddress
+
+
+pdb = PoliticsDB(129391923)
+pdb.fetchAll()
