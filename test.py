@@ -21,12 +21,6 @@ class StdOutListener(StreamListener):
     def on_error(self, status):
         print status
 
-def writeToMongo (dict):
-    # if type(dict) != dict: return error!
-    db = client.tweets1
-    collection = db.testData
-    return True
-
 if __name__ == '__main__':
     client = MongoClient('localhost', 27017)
 
