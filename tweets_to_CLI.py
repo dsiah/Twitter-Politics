@@ -3,6 +3,7 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from pymongo import MongoClient
+from politics_keywords_refined import politics_keywords
 
 import json
 import credentials # custom security file MUST-HAVE
@@ -14,7 +15,8 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
-        print tweet['text']
+        if 'text' in tweet:
+            print tweet['text']
         return True
 
     def on_error(self, status):
@@ -29,5 +31,5 @@ if __name__ == '__main__':
     
 
 
-    stream.filter(track=['Hilary', 'Cruz', 'Politics', 'President', 'Obama', 'healthcare', 'Israel']) 
+    stream.filter(track=politics_keywords) 
     # TODO add more Buzzwords
