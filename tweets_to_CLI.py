@@ -29,5 +29,5 @@ if __name__ == '__main__':
     
 
 
-    stream.filter(track=['Hilary', 'Cruz', 'Politics']) 
+    stream.filter(track=['Hilary', 'Cruz', 'Politics', 'President', 'Obama', 'healthcare', 'Israel']) 
     # TODO add more Buzzwords
