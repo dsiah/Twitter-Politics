@@ -3,6 +3,7 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from pymongo import MongoClient
+from politics_keywords import politics_keywords
 
 import json
 import credentials # custom security file MUST-HAVE
@@ -32,5 +33,5 @@ if __name__ == '__main__':
     
 
 
-    stream.filter(track=['Hilary', 'Cruz', 'Politics']) 
+    stream.filter(track=politics_keywords) 
     # TODO add more Buzzwords

@@ -139,7 +139,6 @@ politics_keywords = [
 'politics',
 'obamas',
 'executive',
-'internet',
 'legal',
 'debates',
 'democrats',
