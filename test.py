@@ -13,10 +13,16 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
-        print "Wrote tweet" , tweet['id']
+        
         db = client.tweets1
         collection = db.testData
-        collection.insert({ 'tweetId': tweet['id'], 'text': tweet['text'] })
+        
+        try:
+            print "Wrote tweet" , tweet['id']
+            collection.insert({ 'tweetId': tweet['id'], 'text': tweet['text'] })
+        except KeyError:
+            print "Tweet did not have all keys"
+        
         return True
 
     def on_error(self, status):
@@ -31,7 +37,5 @@ if __name__ == '__main__':
     auth.set_access_token(credentials.access_token, credentials.access_token_secret)
     stream = Stream(auth, l)
     
-
-
     stream.filter(track=politics_keywords) 
     # TODO add more Buzzwords
