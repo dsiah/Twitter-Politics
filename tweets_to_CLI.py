@@ -1,4 +1,4 @@
-# Boilerplate code lifted from http://adilmoujahid.com/posts/2014/07/twitter-analytics/
+#Boilerplate code lifted from http://adilmoujahid.com/posts/2014/07/twitter-analytics/
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
@@ -15,9 +15,12 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
+
+        #with open('temptweets.txt', 'a') as tweetsfile:
+            #tweetsfile.write(data + ',')
         if 'text' in tweet:
             #print tweet['text'], tweet['timestamp_ms']
-            print tweet['text'], tweet['timestamp_ms']
+            print tweet
         return True
 
     def on_error(self, status):
