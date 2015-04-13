@@ -12,14 +12,28 @@ import credentials # custom security file MUST-HAVE
 class StdOutListener(StreamListener):
 
     def on_data(self, data):
-        tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
-        print "Wrote tweet" , tweet['id']
-        db = client.tweets1
-        collection = db.day1
-
-        collection.insert({ 'tweetId': tweet['id'], 'text': tweet['text'],
-                            'timestamp_ms': tweet['timestamp_ms'] })
-        return True
+        try:
+            tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
+            print "Wrote tweet" , tweet['id']
+        
+            db = client.tweets1
+            collection = db.apr11
+            collection.insert({ 'tweetId': tweet['id'],
+                            'text': tweet['text'],
+                            'created_at': tweet['created_at'],
+                            'lang': tweet['lang'],
+                            'user': tweet['user'],
+                            'retweet_count': tweet['retweet_count'],
+                            'favorite_count': tweet['favorite_count'],
+                            'source': tweet['source'],
+                            'entities': tweet['entities'] })
+            return True
+        
+        except KeyError as e:
+            print "Key Error: ", e
+            
+        except:
+            print "Unexpected Error"
 
     def on_error(self, status):
         print status
