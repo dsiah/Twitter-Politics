@@ -14,7 +14,7 @@ def load_tweets(source_file):
         file containing strings(tweets) separated by newlines
     '''
     with open(source_file, 'r+') as f:
-        contents = [x.strip('\n') for x in f.readlines()]
+        contents = [x.strip('\n') for x in f.readlines()][:200]
     return contents
 
 def get_vocab(source_file):
@@ -40,7 +40,7 @@ def tf_idf(tweets):
         a list of tweets
     '''
     term_frequency = CountVectorizer().fit_transform(tweets)
-    normalized_matrix = TfidfTransformer().fit_transform(array)
+    normalized_matrix = TfidfTransformer().fit_transform(term_frequency)
     tfidf_graph = normalized_matrix * normalized_matrix.T
     return (tfidf_graph, tweets)
 
@@ -97,3 +97,13 @@ def expand_tweet(tweet, n):
     append top 10 TFIDF terms to tweet before LDA
     '''
     pass
+
+vocab = get_vocab("politician_text_test.txt")
+tweets = load_tweets("politician_text_test.txt")
+matrix = tf_idf(tweets)
+print vocab
+print tweets
+print matrix[0].toarray()
+print matrix[0].shape
+rankings = text_rank(matrix)
+print rankings
