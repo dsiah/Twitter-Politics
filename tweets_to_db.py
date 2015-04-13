@@ -13,11 +13,11 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         try:
-            tweet = json.loads(data.encode('ascii', 'ignore')) # encode to ascii to use decode json
+            tweet = json.loads(data.encode('utf-8', 'ignore')) # encode to ascii to use decode json
             print "Wrote tweet" , tweet['id']
         
-            db = client.tweets1
-            collection = db.apr11
+            db = client.tweets2
+            collection = db.apr13
             collection.insert({ 'tweetId': tweet['id'],
                             'text': tweet['text'],
                             'created_at': tweet['created_at'],
@@ -31,6 +31,10 @@ class StdOutListener(StreamListener):
         
         except KeyError as e:
             print "Key Error: ", e
+	except UnicodeDecodeError:
+      	    print "Unicode decode error"
+	except UnicodeEncodeError:
+	    print "Unicode encode error"
             
         except:
             print "Unexpected Error"
