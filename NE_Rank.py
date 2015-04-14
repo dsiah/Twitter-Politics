@@ -68,7 +68,6 @@ def get_topics_lda(X, n_topics, n_iter=500, random_state=1):
 
     '''
     model = lda.LDA(n_topics, n_iter)
-    #unfinished
     return (model.fit_transform(X))
 
 def text_rank(data):
@@ -82,7 +81,7 @@ def text_rank(data):
     '''
     matrix, tweets = data[0], data[1]
     nx_graph = nx.from_scipy_sparse_matrix(matrix)
-    scores = nx.pagerank(matrix)
+    scores = nx.pagerank(nx_graph)
     return sorted(((scores[i], s) for i,s in enumerate(tweets)), reverse=True)
 
 
