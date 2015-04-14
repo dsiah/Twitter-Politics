@@ -16,17 +16,15 @@ class StdOutListener(StreamListener):
             tweet = json.loads(data.encode('utf-8', 'ignore')) # encode to ascii to use decode json
             print "Wrote tweet" , tweet['id']
         
-            db = client.tweets2
-            collection = db.apr13
+            db = client.tweets3
+            collection = db.apr14
             collection.insert({ 'tweetId': tweet['id'],
                             'text': tweet['text'],
                             'created_at': tweet['created_at'],
                             'lang': tweet['lang'],
                             'user': tweet['user'],
                             'retweet_count': tweet['retweet_count'],
-                            'favorite_count': tweet['favorite_count'],
-                            'source': tweet['source'],
-                            'entities': tweet['entities'] })
+                            'favorite_count': tweet['favorite_count'] })
             return True
         
         except KeyError as e:
