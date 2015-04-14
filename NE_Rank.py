@@ -14,7 +14,7 @@ def load_tweets(source_file):
         file containing strings(tweets) separated by newlines
     '''
     with open(source_file, 'r+') as f:
-        contents = [x.strip('\n') for x in f.readlines()][:200]
+        contents = [x.strip('\n') for x in f.readlines()]
     return contents
 
 def get_vocab(source_file):
@@ -83,7 +83,6 @@ def text_rank(data):
     nx_graph = nx.from_scipy_sparse_matrix(matrix)
     scores = nx.pagerank(nx_graph)
     return sorted(((scores[i], s) for i,s in enumerate(tweets)), reverse=True)
-
 
 def expand_tweet(tweet, n):
     '''
