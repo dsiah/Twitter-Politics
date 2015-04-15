@@ -17,17 +17,7 @@ def load_tweets(source_filename):
         tweets = [tweet.rstrip().lower() for tweet in source.readlines()]
     return tweets
 
-def tokenize_tweets_unigrams(tweets):
-    tweet_tokens = []
-    for tweet in tweets:
-        tweet_tokens += nltk.word_tokenize(tweet)
-    stopwords = nltk.corpus.stopwords.words('english')
-    stopwords = stopwords + [ '.', ',', ':', ';', 's', '#', '@', '&', 'rt', "''", '``', 
-                              '?', '!', '$' ]
-    tweet_tokens_processed = [word for word in tweet_tokens if word not in stopwords]
-    return list(set(tweet_tokens_processed))
-
-def tokenize_for_vectorize(tweet):
+def tokenize(tweet):
     tweet_tokens = nltk.word_tokenize(tweet)
     stopwords = nltk.corpus.stopwords.words('english')
     pattern = '\W*'
@@ -42,30 +32,16 @@ def count_vectorize(tweets):
                               '?', '!', '$', '...', "'s", "n't", "'", "--", '-', '%', '|',
                               '/', '(', ')' ]
 
-    vectorizer = CountVectorizer(min_df=1, tokenizer=tokenize_for_vectorize, stop_words = stopwords, ngram_range=(1,2))
+    vectorizer = CountVectorizer(min_df=1, tokenizer=tokenize_for_vectorize, 
+                                 stop_words = stopwords, ngram_range=(1,2))
     count_vector = vectorizer.fit_transform(tweets)
-    print "count_vecor shape: " + str(count_vector.shape)
+    print "count_vector shape: " + str(count_vector.shape)
     return (count_vector, vectorizer.get_feature_names())
-
-def tf_idf(count_vector_and_vocab):
-    count_vector, vocab = count_vector_and_vocab
-    transformer = TfidfTransformer()
-    tfidf = transformer.fit_transform(count_vector)
-    print "tfidf_shape : " + str(tfidf.shape)
-    return (tfidf, vocab)
-
-def count_and_tf_idf(tweets):
-    vectorizer = CountVectorizer(min_df=1)
-    count_vector = vectorizer.fit_transform(tweets)
-    transformer = TfidfTransformer()
-    tfidf = transformer.fit_transform(count_vector)
-    print "tfidf_shape : " + str(tfidf.shape)
-    return (tfidf, vectorizer.get_feature_names())
 
 def get_topics_lda(tfidf_matrix_and_vocab, tweets):
     tfidf_matrix, vocab = tfidf_matrix_and_vocab
     print "tfidf_matrix size: " + str(tfidf_matrix.shape)
-    model = lda.LDA(n_topics=40, n_iter=500, random_state=1)
+    model = lda.LDA(n_topics=30, n_iter=500, random_state=1)
     model.fit(tfidf_matrix)
     topic_word = model.topic_word_
     n_top_words = 8
