@@ -14,7 +14,7 @@ def load_tweets(source_file):
         file containing strings(tweets) separated by newlines
     '''
     with open(source_file, 'r+') as f:
-        contents = [x.strip('\n') for x in f.readlines()]
+        contents = [x.strip('\n') for x in f.readlines()][:200]        
     return contents
 
 def get_vocab(source_file):
@@ -84,24 +84,15 @@ def text_rank(data):
     scores = nx.pagerank(nx_graph)
     return sorted(((scores[i], s) for i,s in enumerate(tweets)), reverse=True)
 
-def expand_tweet(tweet, n):
-    '''
-    to increase the accuracy of keywords (bc tweets are sparse)
-    query search api, with tweet as search query
-    take the first n search snippets
+if  __name__ == '__main__':
 
-    get term-frequency matrix and get top 10 TFIDF terms
+    vocab = get_vocab("politician_text_test.txt")
+    tweets = load_tweets("politician_text_test.txt")
+    matrix = tf_idf(tweets)
 
-    append top 10 TFIDF terms to tweet before LDA
-    '''
-    pass
-
-vocab = get_vocab("politician_text_test.txt")
-tweets = load_tweets("politician_text_test.txt")
-matrix = tf_idf(tweets)
-print vocab
-print tweets
-print matrix[0].toarray()
-print matrix[0].shape
-rankings = text_rank(matrix)
-print rankings
+    print vocab
+    print tweets
+    print matrix[0].toarray()
+    print matrix[0].shape
+    rankings = text_rank(matrix)
+    print rankings
