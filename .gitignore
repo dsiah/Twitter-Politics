@@ -1,3 +1,6 @@
 credentials.*
 dump/
 *.pyc
+topics/*.txt
+topics/rankings/*.txt
+
