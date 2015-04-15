@@ -70,29 +70,31 @@ def get_topics_lda(X, n_topics, n_iter=500, random_state=1):
     model = lda.LDA(n_topics, n_iter)
     return (model.fit_transform(X))
 
-def text_rank(data):
+def text_rank(data, vocab):
     '''
     Returns a ranking of words
     
     parameters
-    --------------------------
+    --------------------------------
     data : tuple (numpy matrix, list)
 
     '''
-    matrix, tweets = data[0], data[1]
+    matrix, tweets = data[0], data[1] # data[1] # data[1] should be vocab
     nx_graph = nx.from_scipy_sparse_matrix(matrix)
     scores = nx.pagerank(nx_graph)
-    return sorted(((scores[i], s) for i,s in enumerate(tweets)), reverse=True)
+    
+    return sorted(((scores[i], s) for i,s in enumerate(vocab)), reverse=True)
 
 if  __name__ == '__main__':
 
     vocab = get_vocab("politician_text_test.txt")
     tweets = load_tweets("politician_text_test.txt")
-    matrix = tf_idf(tweets)
+    matrix = tf_idf(vocab)
 
     print vocab
-    print tweets
     print matrix[0].toarray()
     print matrix[0].shape
-    rankings = text_rank(matrix)
+
+    rankings = text_rank(matrix, vocab)
+
     print rankings
