@@ -3,6 +3,7 @@ import numpy as np
 import lda
 import networkx as nx
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer, TfidfTransformer
+import os
 
 def load_tweets(source_file):
     '''
@@ -14,7 +15,7 @@ def load_tweets(source_file):
         file containing strings(tweets) separated by newlines
     '''
     with open(source_file, 'r+') as f:
-        contents = [x.strip('\n') for x in f.readlines()][:200]        
+        contents = [x.strip('\n') for x in f.readlines()]
     return contents
 
 def get_vocab(source_file):
@@ -85,6 +86,22 @@ def text_rank(data, vocab):
     
     return sorted(((scores[i], s) for i,s in enumerate(vocab)), reverse=True)
 
+def rank_topic(filename, rankings):
+    pattern = '.txt'
+    dest_filename = re.sub(pattern, '_ranking.txt', filename)
+    with open('./topic_rankings/' + dest_filename, 'a+') as dest:
+        for ranking in rankings:
+            dest.write(ranking + '\n')
+        print "Wrote to {}".format(dest_filename)
+
+def rank_all_topics():
+    for topic_file in os.listdir('./topics'):
+        pass
+
+
+        
+
+
 if  __name__ == '__main__':
 
     vocab = get_vocab("politician_text_test.txt")
@@ -96,5 +113,6 @@ if  __name__ == '__main__':
     print matrix[0].shape
 
     rankings = text_rank(matrix, vocab)
+    #rank_topic('./topics/topic0.txt', rankings)
 
     print rankings
