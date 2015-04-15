@@ -75,21 +75,20 @@ def text_rank(data_and_vocab):
     return sorted(((scores[i], s) for i,s in enumerate(vocab)), reverse=True)
 
 def rank_topic(filename, rankings):
-    pattern = '.txt'
-    dest_filename = re.sub(pattern, '_ranking.txt', filename)
+    pattern = './topics/'
+    dest_filename = re.sub(pattern, './topics/rankings/', filename)
     with open(dest_filename, 'a+') as dest:
-        
         for ranking in rankings:
             dest.write(str(ranking[0]))
             dest.write(' , ')
             dest.write(ranking[1])
             dest.write('\n')
-            
         print "Completed write to {}".format(dest_filename)
 
 def rank_all_topics():
     for topic_file in os.listdir('./topics'):
         pass
+
 
 
 if  __name__ == '__main__':
