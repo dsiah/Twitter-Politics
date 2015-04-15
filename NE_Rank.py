@@ -4,6 +4,7 @@ import lda
 import networkx as nx
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer, TfidfTransformer
 import os
+from preprocessing import tokenize, count_vectorize
 
 def load_tweets(source_file):
     '''
@@ -15,7 +16,7 @@ def load_tweets(source_file):
         file containing strings(tweets) separated by newlines
     '''
     with open(source_file, 'r+') as f:
-        contents = [x.strip('\n') for x in f.readlines()]
+        contents = [x.strip('\n') for x in f.readlines()][:300]
     return contents
 
 def get_vocab(source_file):
@@ -40,7 +41,8 @@ def tf_idf(tweets):
     tweets : python list
         a list of tweets
     '''
-    term_frequency = CountVectorizer().fit_transform(tweets)
+    vectorizer = CountVectorizer()
+    term_frequency = vectorizer.fit_transform(tweets)
     normalized_matrix = TfidfTransformer().fit_transform(term_frequency)
     tfidf_graph = normalized_matrix * normalized_matrix.T
     return (tfidf_graph, tweets)
