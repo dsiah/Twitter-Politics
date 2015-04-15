@@ -17,21 +17,8 @@ def load_tweets(source_file):
         file containing strings(tweets) separated by newlines
     '''
     with open(source_file, 'r+') as f:
-        contents = [x.strip('\n') for x in f.readlines()][:300]
+        contents = [x.strip('\n') for x in f.readlines()]
     return contents
-
-def get_vocab(source_file):
-    '''
-    returns a list of tokens from the source file
-
-    parameters
-    -----------------------
-    source_file
-        file containing strings separated by newlines
-    '''
-    contents = load_tweets(source_file)
-    contents = ' '.join(contents)
-    return nltk.word_tokenize(contents)
 
 def tf_idf(data_and_vocab):
     '''
@@ -107,7 +94,7 @@ def rank_all_topics():
 
 if  __name__ == '__main__':
 
-    tweets = load_tweets("politician_text_test.txt")
+    tweets = load_tweets("./topics/topic0.txt")
     data_and_vocab = count_vectorize(tweets, tokenize)
     matrix_and_vocab = tf_idf(data_and_vocab)
     print matrix_and_vocab[0].toarray()
