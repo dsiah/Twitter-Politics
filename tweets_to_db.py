@@ -16,14 +16,11 @@ class StdOutListener(StreamListener):
             tweet = json.loads(data.encode('utf-8', 'ignore')) # encode to ascii to use decode json
             print "Wrote tweet" , tweet['id']
         
-            db = client.tweets3
+            db = client.tweets5
             collection = db.apr14
             collection.insert({ 'tweetId': tweet['id'],
                             'text': tweet['text'],
                             'created_at': tweet['created_at'],
-                            'lang': tweet['lang'],
-                            'user': tweet['user'],
-                            'retweet_count': tweet['retweet_count'],
                             'favorite_count': tweet['favorite_count'] })
             return True
         
