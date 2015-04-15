@@ -54,7 +54,6 @@ def get_topics_lda(tfidf_matrix_and_vocab, tweets):
     print doc_topic[0]
     return True
 
-
 if __name__=="__main__":
     #remove_links('politician_text_test.txt', 'politician_text_processed.txt')
     tweets = load_tweets('politician_text_processed.txt')
