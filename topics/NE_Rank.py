@@ -3,9 +3,6 @@ import numpy as np
 import lda
 import networkx as nx
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer, TfidfTransformer
-import os
-import re
-from preprocessing import tokenize, count_vectorize
 
 def load_tweets(source_file):
     '''
@@ -17,7 +14,7 @@ def load_tweets(source_file):
         file containing strings(tweets) separated by newlines
     '''
     with open(source_file, 'r+') as f:
-        contents = [x.strip('\n') for x in f.readlines()][:300]
+        contents = [x.strip('\n') for x in f.readlines()][:200]        
     return contents
 
 def get_vocab(source_file):
@@ -33,7 +30,7 @@ def get_vocab(source_file):
     contents = ' '.join(contents)
     return nltk.word_tokenize(contents)
 
-def tf_idf(data_and_vocab):
+def tf_idf(tweets):
     '''
     returns a numpy matrix of tf_idf values, and a list of tweets
 
@@ -42,10 +39,10 @@ def tf_idf(data_and_vocab):
     tweets : python list
         a list of tweets
     '''
-    term_frequency, vocab = data_and_vocab
+    term_frequency = CountVectorizer().fit_transform(tweets)
     normalized_matrix = TfidfTransformer().fit_transform(term_frequency)
-    tfidf_graph = normalized_matrix.T * normalized_matrix
-    return (tfidf_graph, vocab)
+    tfidf_graph = normalized_matrix * normalized_matrix.T
+    return (tfidf_graph, tweets)
 
 def get_topics_lda(X, n_topics, n_iter=500, random_state=1):
     '''
@@ -73,7 +70,7 @@ def get_topics_lda(X, n_topics, n_iter=500, random_state=1):
     model = lda.LDA(n_topics, n_iter)
     return (model.fit_transform(X))
 
-def text_rank(data_and_vocab):
+def text_rank(data, vocab):
     '''
     Returns a ranking of words
     
@@ -82,35 +79,22 @@ def text_rank(data_and_vocab):
     data : tuple (numpy matrix, list)
 
     '''
-    data, vocab = data_and_vocab
-    nx_graph = nx.from_scipy_sparse_matrix(data)
+    matrix, tweets = data[0], data[1] # data[1] # data[1] should be vocab
+    nx_graph = nx.from_scipy_sparse_matrix(matrix)
     scores = nx.pagerank(nx_graph)
+    
     return sorted(((scores[i], s) for i,s in enumerate(vocab)), reverse=True)
-
-def rank_topic(filename, rankings):
-    pattern = '.txt'
-    dest_filename = re.sub(pattern, '_ranking.txt', filename)
-    with open(dest_filename, 'a+') as dest:
-        
-        for ranking in rankings:
-            dest.write(str(ranking[0]))
-            dest.write(' , ')
-            dest.write(ranking[1])
-            dest.write('\n')
-            
-        print "Completed write to {}".format(dest_filename)
-
-def rank_all_topics():
-    for topic_file in os.listdir('./topics'):
-        pass
-
 
 if  __name__ == '__main__':
 
+    vocab = get_vocab("politician_text_test.txt")
     tweets = load_tweets("politician_text_test.txt")
-    data_and_vocab = count_vectorize(tweets, tokenize)
-    matrix_and_vocab = tf_idf(data_and_vocab)
-    print matrix_and_vocab[0].toarray()
-    print matrix_and_vocab[0].shape
-    rankings = text_rank(matrix_and_vocab)
-    rank_topic('./topics/topic0.txt', rankings)
+    matrix = tf_idf(vocab)
+
+    print vocab
+    print matrix[0].toarray()
+    print matrix[0].shape
+
+    rankings = text_rank(matrix, vocab)
+
+    print rankings
