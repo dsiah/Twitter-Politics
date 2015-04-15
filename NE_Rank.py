@@ -32,7 +32,7 @@ def get_vocab(source_file):
     contents = ' '.join(contents)
     return nltk.word_tokenize(contents)
 
-def tf_idf(tweets):
+def tf_idf(data_and_vocab):
     '''
     returns a numpy matrix of tf_idf values, and a list of tweets
 
@@ -41,11 +41,10 @@ def tf_idf(tweets):
     tweets : python list
         a list of tweets
     '''
-    vectorizer = CountVectorizer()
-    term_frequency = vectorizer.fit_transform(tweets)
+    term_frequency, vocab = data_and_vocab
     normalized_matrix = TfidfTransformer().fit_transform(term_frequency)
-    tfidf_graph = normalized_matrix * normalized_matrix.T
-    return (tfidf_graph, tweets)
+    tfidf_graph = normalized_matrix.T * normalized_matrix
+    return (tfidf_graph, vocab)
 
 def get_topics_lda(X, n_topics, n_iter=500, random_state=1):
     '''
@@ -73,7 +72,7 @@ def get_topics_lda(X, n_topics, n_iter=500, random_state=1):
     model = lda.LDA(n_topics, n_iter)
     return (model.fit_transform(X))
 
-def text_rank(data, vocab):
+def text_rank(data_and_vocab):
     '''
     Returns a ranking of words
     
@@ -82,10 +81,9 @@ def text_rank(data, vocab):
     data : tuple (numpy matrix, list)
 
     '''
-    matrix, tweets = data[0], data[1] # data[1] # data[1] should be vocab
-    nx_graph = nx.from_scipy_sparse_matrix(matrix)
+    data, vocab = data_and_vocab
+    nx_graph = nx.from_scipy_sparse_matrix(data)
     scores = nx.pagerank(nx_graph)
-    
     return sorted(((scores[i], s) for i,s in enumerate(vocab)), reverse=True)
 
 def rank_topic(filename, rankings):
@@ -106,15 +104,13 @@ def rank_all_topics():
 
 if  __name__ == '__main__':
 
-    vocab = get_vocab("politician_text_test.txt")
     tweets = load_tweets("politician_text_test.txt")
-    matrix = tf_idf(vocab)
+    data_and_vocab = count_vectorize(tweets, tokenize)
+    matrix_and_vocab = tf_idf(data_and_vocab)
+    print matrix_and_vocab[0].toarray()
+    print matrix_and_vocab[0].shape
 
-    print vocab
-    print matrix[0].toarray()
-    print matrix[0].shape
-
-    rankings = text_rank(matrix, vocab)
+    rankings = text_rank(matrix_and_vocab)
     #rank_topic('./topics/topic0.txt', rankings)
 
     print rankings

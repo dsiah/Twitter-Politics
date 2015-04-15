@@ -40,12 +40,12 @@ def tokenize(tweet):
     tweet_tokens_processed = [word for word in tweet_tokens if word not in stopwords]
     return list(set(tweet_tokens_processed))
 
-def count_vectorize(tweets):
+def count_vectorize(tweets, tokenizer_function):
     stopwords = nltk.corpus.stopwords.words('english')
     stopwords = stopwords + [ '.', ',', ':', ';', 's', '#', '@', '&', 'rt', "''", '``', 
                               '?', '!', '$', '...', "'s", "n't", "'", "--", '-', '%', '|',
                               '/', '(', ')' ]
-    vectorizer = CountVectorizer(min_df=1, tokenizer=tokenize, 
+    vectorizer = CountVectorizer(min_df=1, tokenizer=tokenizer_function, 
                                  stop_words = stopwords) #ngram_range=(1,2))
     count_vector = vectorizer.fit_transform(tweets)
     print "count_vector shape: " + str(count_vector.shape)
@@ -76,5 +76,5 @@ if __name__=="__main__":
     #write_to_topics(tweets, doc_topic)
     #print load_tweets_db('tweets3', 'apr14', 50)
     tweets = load_tweets_db('tweets3', 'apr14', 50)
-    topics = get_topics_lda(count_vectorize(tweets), tweets)
+    topics = get_topics_lda(count_vectorize(tweets, tokenize), tweets)
 
