@@ -20,6 +20,19 @@ def load_tweets(source_file):
         contents = [x.strip('\n') for x in f.readlines()]
     return contents
 
+def get_vocab(source_file):
+    '''
+    returns a list of tokens from the source file
+
+    parameters
+    -----------------------
+    source_file
+        file containing strings separated by newlines
+    '''
+    contents = load_tweets(source_file)
+    contents = ' '.join(contents)
+    return nltk.word_tokenize(contents)
+
 def tf_idf(data_and_vocab):
     '''
     returns a numpy matrix of tf_idf values, and a list of tweets
@@ -75,14 +88,17 @@ def text_rank(data_and_vocab):
     return sorted(((scores[i], s) for i,s in enumerate(vocab)), reverse=True)
 
 def rank_topic(filename, rankings):
-    pattern = './topics/'
-    dest_filename = re.sub(pattern, './topics/rankings/', filename)
+    pattern = '.txt'
+    dest_filename = re.sub(pattern, '_ranking.txt', filename)
+    
     with open(dest_filename, 'a+') as dest:
+        
         for ranking in rankings:
             dest.write(str(ranking[0]))
             dest.write(' , ')
             dest.write(ranking[1])
             dest.write('\n')
+            
         print "Completed write to {}".format(dest_filename)
 
 def rank_all_topics():
@@ -90,9 +106,7 @@ def rank_all_topics():
         pass
 
 
-
 if  __name__ == '__main__':
-
     tweets = load_tweets("./topics/topic0.txt")
     data_and_vocab = count_vectorize(tweets, tokenize)
     matrix_and_vocab = tf_idf(data_and_vocab)

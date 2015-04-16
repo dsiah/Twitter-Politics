@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 import lda
 from pymongo import MongoClient
+import codecs
 
 def remove_links(source_filename, dest_filename):
     pattern = 'http://\S*|https://\S*'
@@ -26,7 +27,12 @@ def load_tweets_db(db_name, table_name, num):
     db = client[db_name]
     collection = db[table_name]
     tweets = []
-    for tweet in collection.find().limit(50000):
+    url_pattern = "http://\S*|https://\S*"
+    utf_pattern = "[^\x00-\x7F]+"
+    
+    for tweet in collection.find().limit(100000):
+        tweet = re.sub(utf_pattern, '', tweet)
+        tweet = re.sub(url_pattern, '', tweet)
         tweets.append(tweet["text"])
     return tweets
 
@@ -61,20 +67,16 @@ def get_topics_lda(tfidf_matrix_and_vocab, tweets):
 
 def write_to_topics(tweets, doc_topic):
     for i in range(len(tweets)):
-        with open('./topics/topic{}.txt'.format(doc_topic[i].argmax()), 'a+') as dest:
-            dest.write(tweets[i] + "\n")
+        with open('./topics/topic{}.txt'.format(doc_topic[i].argmax()), 'a+') as dest:            
+            dest.write(tweets[i])
+            dest.write('\n')
             print 'writing tweet {0} to topic {1}'.format(i + 1, doc_topic[i].argmax())
     return True
 
 
 
 if __name__=="__main__":
-    #remove_links('politician_text_test.txt', 'politician_text_processed.txt')
-    #tweets = load_tweets('politician_text_processed.txt')
-    #print get_topics_lda(count_vectorize(tweets), tweets)
-    #topics = get_topics_lda(count_vectorize(tweets), tweets)
-    #write_to_topics(tweets, doc_topic)
-    #print load_tweets_db('tweets3', 'apr14', 50)
+
     tweets = load_tweets_db('tweets3', 'apr14', 50)
     topics = get_topics_lda(count_vectorize(tweets, tokenize), tweets)
-
+    write_to_topics(tweets, topics)
