@@ -8,7 +8,6 @@ from pymongo import MongoClient
 import matplotlib.pyplot as plt
 
 def remove_links(source_filename, dest_filename):
-    pattern = 'http://\S*|https://\S*'
     with open (source_filename, 'r+') as source, open(dest_filename, 'a') as dest:
         for line, tweet in enumerate(source, 1):
             print "Processing tweet " + str(line)
