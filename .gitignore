@@ -3,4 +3,7 @@ dump/
 *.pyc
 topics/*.txt
 topics/rankings/*.txt
+topics*/
+topics_1m_35/
+topics_1m_35/rankings/*.txt
 

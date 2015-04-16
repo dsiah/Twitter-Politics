@@ -105,14 +105,12 @@ def rank_all_topics():
     topic_files = [topicfile for topicfile in os.listdir('./topics') if topicfile[-4:] == '.txt']
     for topic_file in topic_files:
         topic_file = './topics/' + topic_file
+        print "Ranking {}".format(topic_file)
         tweets = load_tweets(topic_file)
         data_and_vocab = count_vectorize(tweets, tokenize)
         tfidf_and_vocab = tf_idf(data_and_vocab)
         rankings = text_rank(tfidf_and_vocab)
         rank_topic(topic_file, rankings)
-
-
-
 
 if  __name__ == '__main__':
     """
