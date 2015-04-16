@@ -102,11 +102,20 @@ def rank_topic(filename, rankings):
         print "Completed write to {}".format(dest_filename)
 
 def rank_all_topics():
-    for topic_file in os.listdir('./topics'):
-        pass
+    topic_files = [topicfile for topicfile in os.listdir('./topics') if topicfile[-4:] == '.txt']
+    for topic_file in topic_files:
+        topic_file = './topics/' + topic_file
+        tweets = load_tweets(topic_file)
+        data_and_vocab = count_vectorize(tweets, tokenize)
+        tfidf_and_vocab = tf_idf(data_and_vocab)
+        rankings = text_rank(tfidf_and_vocab)
+        rank_topic(topic_file, rankings)
+
+
 
 
 if  __name__ == '__main__':
+    """
     tweets = load_tweets("./topics/topic0.txt")
     data_and_vocab = count_vectorize(tweets, tokenize)
     matrix_and_vocab = tf_idf(data_and_vocab)
@@ -114,3 +123,5 @@ if  __name__ == '__main__':
     print matrix_and_vocab[0].shape
     rankings = text_rank(matrix_and_vocab)
     rank_topic('./topics/topic0.txt', rankings)
+    """
+    rank_all_topics()
