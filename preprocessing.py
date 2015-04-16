@@ -7,7 +7,6 @@ from pymongo import MongoClient
 import codecs
 
 def remove_links(source_filename, dest_filename):
-    pattern = 'http://\S*|https://\S*'
     with open (source_filename, 'r+') as source, open(dest_filename, 'a') as dest:
         for line, tweet in enumerate(source, 1):
             print "Processing tweet " + str(line)
@@ -29,11 +28,16 @@ def load_tweets_db(db_name, table_name, num):
     tweets = []
     url_pattern = "http://\S*|https://\S*"
     utf_pattern = "[^\x00-\x7F]+"
+
+    count = 0
     
     for tweet in collection.find().limit(100000):
+        tweet = tweet["text"]
         tweet = re.sub(utf_pattern, '', tweet)
         tweet = re.sub(url_pattern, '', tweet)
-        tweets.append(tweet["text"])
+        tweets.append(tweet)
+        print count
+        count += 1
     return tweets
 
 
