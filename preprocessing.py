@@ -22,7 +22,7 @@ def load_tweets(source_filename):
         tweets = [tweet.rstrip().lower() for tweet in source.readlines()]
     return tweets
 
-def load_tweets_db(db_name, table_name, num):
+def load_tweets_db(db_name, table_name, cursor):
     client = MongoClient()
     db = client[db_name]
     collection = db[table_name]
@@ -31,7 +31,7 @@ def load_tweets_db(db_name, table_name, num):
     utf_pattern = '[^\x00-\x7F]+'
 
     count = 0
-    for tweet in collection.find( {"lang":"en"} ).limit(1000000):
+    for tweet in collection.find({ "lang": "en" }).skip(cursor).limit(1000000):
         count += 1
         tweet = tweet["text"]
         tweet = re.sub( url_pattern, '', tweet )
@@ -96,12 +96,12 @@ def write_to_topics(tweets, doc_topic):
 
 if __name__=="__main__":
     #remove_links('politician_text_test.txt', 'politician_text_processed.txt')
-    #tweets = load_tweets('politician_text_processed.txt')
-    #print get_topics_lda(count_vectorize(tweets), tweets)
-    #topics = get_topics_lda(count_vectorize(tweets), tweets)
-    #write_to_topics(tweets, doc_topic)
-    #print load_tweets_db('tweets3', 'apr14', 50)
-    tweets = load_tweets_db('tweets3', 'apr14', 50)
+    # tweets = load_tweets('politician_text_processed.txt')
+    # print get_topics_lda(count_vectorize(tweets), tweets)
+    # topics = get_topics_lda(count_vectorize(tweets), tweets)
+    # write_to_topics(tweets, doc_topic)
+    # print load_tweets_db('tweets3', 'apr14', 50)
+    tweets = load_tweets_db('tweets3', 'apr14', 50000)
     topics = get_topics_lda(count_vectorize(tweets, tokenize), tweets)
     write_to_topics(tweets, topics)
 
